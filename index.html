@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>The World Changes When You Do</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="game">
+
+    <div id="homeScreen">
+        <h1>The World Changes When You Do</h1>
+
+        <p class="tagline">
+            Every small decision leaves a mark.
+        </p>
+
+        <button onclick="startGame()">START GAME</button>
+    </div>
+
+    <div id="gameScreen" class="hidden">
+
+        <p id="dayText"></p>
+
+        <h2 id="sceneTitle"></h2>
+
+        <p id="storyText"></p>
+
+        <div id="choices"></div>
+
+    </div>
+
+    <div id="resultScreen" class="hidden">
+
+        <h2>Your World</h2>
+
+        <p id="scoreText"></p>
+
+        <p id="resultText"></p>
+
+        <button onclick="startGame()">PLAY AGAIN</button>
+
+    </div>
+
+</div>
+
+<script src="game.js"></script>
+
+</body>
+</html>
