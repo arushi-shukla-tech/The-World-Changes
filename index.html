@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>The World Changes When You Do</title>
+    <title>The City That Remembers</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -10,37 +10,28 @@
 
 <div class="game">
 
-    <div id="homeScreen">
-        <h1>The World Changes When You Do</h1>
-
-        <p class="tagline">
-            Every small decision leaves a mark.
-        </p>
-
-        <button onclick="startGame()">START GAME</button>
+    <div class="top">
+        <h2>The City That Remembers</h2>
+        <p id="message">Explore the city...</p>
     </div>
 
-    <div id="gameScreen" class="hidden">
+    <canvas id="gameCanvas"></canvas>
 
-        <p id="dayText"></p>
+    <div class="controls">
 
-        <h2 id="sceneTitle"></h2>
+        <div>
+            <button onclick="movePlayer(0, -1)">▲</button>
+        </div>
 
-        <p id="storyText"></p>
+        <div>
+            <button onclick="movePlayer(-1, 0)">◀</button>
+            <button onclick="interact()">●</button>
+            <button onclick="movePlayer(1, 0)">▶</button>
+        </div>
 
-        <div id="choices"></div>
-
-    </div>
-
-    <div id="resultScreen" class="hidden">
-
-        <h2>Your World</h2>
-
-        <p id="scoreText"></p>
-
-        <p id="resultText"></p>
-
-        <button onclick="startGame()">PLAY AGAIN</button>
+        <div>
+            <button onclick="movePlayer(0, 1)">▼</button>
+        </div>
 
     </div>
 
