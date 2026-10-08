@@ -1,324 +1,186 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-canvas.width = 900;
-canvas.height = 550;
-
 let player = {
     x: 450,
-    y: 300,
-    size: 22,
-    speed: 5
+    y: 275,
+    size: 20,
+    speed: 6
 };
 
-let camera = {
-    x: 0,
-    y: 0
-};
+let message = document.getElementById("message");
 
-let message = "Explore the city...";
+function drawGame() {
 
-const buildings = [
-    { x: 100, y: 80, w: 150, h: 100, name: "Old House" },
-    { x: 600, y: 70, w: 180, h: 110, name: "School" },
-    { x: 90, y: 390, w: 170, h: 100, name: "Hospital" },
-    { x: 620, y: 370, w: 170, h: 110, name: "City Tower" }
-];
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-const trees = [
-    { x: 330, y: 80 },
-    { x: 500, y: 90 },
-    { x: 330, y: 450 },
-    { x: 500, y: 450 },
-    { x: 50, y: 260 },
-    { x: 850, y: 260 }
-];
-
-const places = [
-    { x: 175, y: 210, name: "Old House" },
-    { x: 690, y: 210, name: "School" },
-    { x: 175, y: 360, name: "Hospital" },
-    { x: 690, y: 350, name: "City Tower" }
-];
-
-function drawCity() {
-
+    // Grass
     ctx.fillStyle = "#6b9b63";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    drawRoads();
-    drawBuildings();
-    drawTrees();
-    drawPlaces();
+    // Roads
+    ctx.fillStyle = "#555555";
+    ctx.fillRect(0, 220, canvas.width, 100);
+    ctx.fillRect(400, 0, 100, canvas.height);
+
+    // Road lines
+    ctx.fillStyle = "#e5df9a";
+
+    for (let x = 0; x < canvas.width; x += 60) {
+        ctx.fillRect(x, 268, 30, 4);
+    }
+
+    for (let y = 0; y < canvas.height; y += 60) {
+        ctx.fillRect(448, y, 4, 30);
+    }
+
+    // Buildings
+    drawBuilding(70, 60, 150, 110, "OLD HOUSE");
+    drawBuilding(680, 60, 150, 110, "SCHOOL");
+    drawBuilding(70, 380, 150, 100, "HOSPITAL");
+    drawBuilding(680, 380, 150, 100, "TOWER");
+
+    // Trees
+    drawTree(300, 100);
+    drawTree(570, 100);
+    drawTree(300, 440);
+    drawTree(570, 440);
+
+    // Player
     drawPlayer();
-
 }
 
-function drawRoads() {
+function drawBuilding(x, y, width, height, name) {
 
-    ctx.fillStyle = "#555b5d";
+    ctx.fillStyle = "#9b684d";
+    ctx.fillRect(x, y, width, height);
 
-    ctx.fillRect(0, 245, canvas.width, 90);
-    ctx.fillRect(405, 0, 90, canvas.height);
+    ctx.fillStyle = "#d9c7a5";
 
-    ctx.strokeStyle = "#d9d9a8";
-    ctx.lineWidth = 4;
+    ctx.fillRect(x + 20, y + 35, 30, 30);
+    ctx.fillRect(x + 100, y + 35, 30, 30);
 
-    for (let x = 0; x < canvas.width; x += 50) {
-        ctx.beginPath();
-        ctx.moveTo(x, 290);
-        ctx.lineTo(x + 25, 290);
-        ctx.stroke();
-    }
+    ctx.fillStyle = "#493027";
+    ctx.fillRect(x + 60, y + 65, 30, 45);
 
-    for (let y = 0; y < canvas.height; y += 50) {
-        ctx.beginPath();
-        ctx.moveTo(450, y);
-        ctx.lineTo(450, y + 25);
-        ctx.stroke();
-    }
+    ctx.fillStyle = "white";
+    ctx.font = "14px Arial";
+    ctx.fillText(name, x + 10, y + 20);
 }
 
-function drawBuildings() {
+function drawTree(x, y) {
 
-    buildings.forEach(function(building) {
+    ctx.fillStyle = "#654321";
+    ctx.fillRect(x - 5, y + 15, 10, 30);
 
-        ctx.fillStyle = "#9b6b50";
-        ctx.fillRect(
-            building.x - camera.x,
-            building.y - camera.y,
-            building.w,
-            building.h
-        );
+    ctx.fillStyle = "#28633a";
 
-        ctx.fillStyle = "#d7c5a3";
-
-        ctx.fillRect(
-            building.x + 20 - camera.x,
-            building.y + 30 - camera.y,
-            35,
-            30
-        );
-
-        ctx.fillRect(
-            building.x + 90 - camera.x,
-            building.y + 30 - camera.y,
-            35,
-            30
-        );
-
-        ctx.fillStyle = "#4d3025";
-
-        ctx.fillRect(
-            building.x + building.w / 2 - 20 - camera.x,
-            building.y + building.h - 45 - camera.y,
-            40,
-            45
-        );
-
-        ctx.fillStyle = "white";
-        ctx.font = "14px Arial";
-
-        ctx.fillText(
-            building.name,
-            building.x + 10 - camera.x,
-            building.y + 18 - camera.y
-        );
-    });
-}
-
-function drawTrees() {
-
-    trees.forEach(function(tree) {
-
-        ctx.fillStyle = "#654321";
-
-        ctx.fillRect(
-            tree.x - 6 - camera.x,
-            tree.y + 15 - camera.y,
-            12,
-            30
-        );
-
-        ctx.beginPath();
-
-        ctx.fillStyle = "#285c35";
-
-        ctx.arc(
-            tree.x - camera.x,
-            tree.y - camera.y,
-            25,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.fill();
-
-    });
-}
-
-function drawPlaces() {
-
-    places.forEach(function(place) {
-
-        let distance = Math.sqrt(
-            Math.pow(player.x - place.x, 2) +
-            Math.pow(player.y - place.y, 2)
-        );
-
-        if (distance < 65) {
-
-            ctx.fillStyle = "#ffffff";
-            ctx.font = "bold 14px Arial";
-
-            ctx.fillText(
-                "Press ● to enter",
-                place.x - camera.x - 45,
-                place.y - camera.y - 35
-            );
-        }
-    });
+    ctx.beginPath();
+    ctx.arc(x, y, 25, 0, Math.PI * 2);
+    ctx.fill();
 }
 
 function drawPlayer() {
 
-    ctx.fillStyle = "#222";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        player.x - camera.x,
-        player.y - camera.y,
-        player.size / 2,
-        0,
-        Math.PI * 2
+    // Body
+    ctx.fillStyle = "#3674a8";
+    ctx.fillRect(
+        player.x - 10,
+        player.y - 5,
+        20,
+        25
     );
 
-    ctx.fill();
-
+    // Head
     ctx.fillStyle = "#f2c6a0";
 
     ctx.beginPath();
-
     ctx.arc(
-        player.x - camera.x,
-        player.y - camera.y - 15,
+        player.x,
+        player.y - 15,
         10,
         0,
         Math.PI * 2
     );
-
     ctx.fill();
 
-    ctx.fillStyle = "#3f6fa0";
+    // Hair
+    ctx.fillStyle = "#222222";
 
-    ctx.fillRect(
-        player.x - 10 - camera.x,
-        player.y - 8 - camera.y,
-        20,
-        25
+    ctx.beginPath();
+    ctx.arc(
+        player.x,
+        player.y - 20,
+        9,
+        Math.PI,
+        Math.PI * 2
     );
+    ctx.fill();
 }
 
-function movePlayer(dx, dy) {
+function movePlayer(x, y) {
 
-    player.x += dx * player.speed * 8;
-    player.y += dy * player.speed * 8;
+    player.x += x * player.speed;
+    player.y += y * player.speed;
 
-    if (player.x < 25) {
-        player.x = 25;
+    // Keep player inside map
+    if (player.x < 20) {
+        player.x = 20;
     }
 
-    if (player.x > 875) {
-        player.x = 875;
+    if (player.x > canvas.width - 20) {
+        player.x = canvas.width - 20;
     }
 
-    if (player.y < 25) {
-        player.y = 25;
+    if (player.y < 30) {
+        player.y = 30;
     }
 
-    if (player.y > 525) {
-        player.y = 525;
+    if (player.y > canvas.height - 20) {
+        player.y = canvas.height - 20;
     }
 
-    updateCamera();
-    checkLocation();
-    drawCity();
-}
+    message.innerText = "You are exploring the city...";
 
-function updateCamera() {
-
-    camera.x = player.x - canvas.width / 2;
-    camera.y = player.y - canvas.height / 2;
-
-    if (camera.x < 0) {
-        camera.x = 0;
-    }
-
-    if (camera.y < 0) {
-        camera.y = 0;
-    }
-
-    if (camera.x > 0) {
-        camera.x = 0;
-    }
-
-    if (camera.y > 0) {
-        camera.y = 0;
-    }
-}
-
-function checkLocation() {
-
-    places.forEach(function(place) {
-
-        let distance = Math.sqrt(
-            Math.pow(player.x - place.x, 2) +
-            Math.pow(player.y - place.y, 2)
-        );
-
-        if (distance < 65) {
-            message = "You are near the " + place.name;
-        }
-    });
-
-    document.getElementById("message").innerText = message;
+    drawGame();
 }
 
 function interact() {
 
-    let nearestPlace = null;
-    let nearestDistance = 1000;
+    let buildings = [
+        { x: 145, y: 115, name: "Old House" },
+        { x: 755, y: 115, name: "School" },
+        { x: 145, y: 430, name: "Hospital" },
+        { x: 755, y: 430, name: "City Tower" }
+    ];
 
-    places.forEach(function(place) {
+    let found = false;
+
+    buildings.forEach(function(building) {
 
         let distance = Math.sqrt(
-            Math.pow(player.x - place.x, 2) +
-            Math.pow(player.y - place.y, 2)
+            Math.pow(player.x - building.x, 2) +
+            Math.pow(player.y - building.y, 2)
         );
 
-        if (distance < nearestDistance) {
-            nearestDistance = distance;
-            nearestPlace = place;
+        if (distance < 100) {
+
+            message.innerText =
+                "You found the " +
+                building.name +
+                ". Something is waiting inside...";
+
+            found = true;
         }
     });
 
-    if (nearestPlace && nearestDistance < 65) {
-
-        message =
-            "You entered the " +
-            nearestPlace.name +
-            ". Something feels familiar...";
-
-    } else {
-
-        message = "There is nothing to interact with here.";
-
+    if (!found) {
+        message.innerText =
+            "Nothing interesting here.";
     }
-
-    document.getElementById("message").innerText = message;
 }
 
+// Keyboard controls
 document.addEventListener("keydown", function(event) {
 
     if (event.key === "ArrowUp" || event.key === "w") {
@@ -340,7 +202,7 @@ document.addEventListener("keydown", function(event) {
     if (event.key === "e") {
         interact();
     }
-
 });
 
-drawCity();
+// Start game
+drawGame();
